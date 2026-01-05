@@ -1,11 +1,7 @@
-import { Suspense } from 'react'
-import DashBoard from '@/components/dashboard/app-dashboard'
-import Loading from './loading'
+import Dashboard from "@/components/dashboard/app-dashboard"
 
 export default function page() {
   return (
-    <Suspense fallback={<Loading />}>
-        <DashBoard/>
-    </Suspense>
+    <Dashboard/>
   )
 }
