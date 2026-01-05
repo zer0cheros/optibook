@@ -3,7 +3,7 @@ import { AppSidebar } from './root-sidebar'
 import { SidebarProvider, SidebarTrigger } from '../ui/sidebar'
 import {MenubarDemo} from './root-nav'
 
-export function RootLayout({children}: {children: React.ReactNode}) {
+export async function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <SidebarProvider className="bg-linear-to-br from-slate-50 via-stone-100 to-slate-100">
             <AppSidebar  />

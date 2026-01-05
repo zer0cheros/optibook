@@ -146,3 +146,21 @@
     --sidebar-ring: oklch(0.439 0 0);
   }
 }
+
+/* Allow event content to wrap instead of clipping in month view */
+.fc .fc-daygrid-event .fc-event-main {
+  white-space: normal;
+}
+
+/* Make the time + title display nicely */
+.fc .fc-daygrid-event .fc-event-time,
+.fc .fc-daygrid-event .fc-event-title {
+  white-space: normal;
+  overflow: visible;
+}
+
+/* Optional: a bit nicer spacing */
+.fc .fc-daygrid-event {
+  
+  border-radius: 8px;
+}

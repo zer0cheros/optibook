@@ -14,30 +14,20 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Home",
-    url: "#",
+    title: "Hem",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
+    title: "Mina samtal",
+    url: "/dashboard",
     icon: Inbox,
   },
   {
-    title: "Calendar",
-    url: "#",
+    title: "Kalender",
+    url: "/calendar",
     icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+  }  
 ]
 
 export function AppSidebar() {

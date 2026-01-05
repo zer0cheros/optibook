@@ -47,7 +47,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   bookings      Booking[]
-
+  calendars     Calendar[]
   @@unique([email])
   @@map("user")
 }
@@ -103,4 +103,50 @@ model Resource {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   bookings  Booking[]
+}
+
+model Calendar {
+  id        String          @id @default(cuid())
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  events    CalendarEvent[]
+
+  @@index([userId])
+}
+
+model CalendarEvent {
+  id          String   @id @default(cuid())
+
+  calendarId  String
+  calendar    Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+
+  // iCal identity
+  uid         String
+  recurrenceId DateTime? // for recurring instances if you later expand RRULE
+
+  title       String?
+  description String?
+  location    String?
+
+  startAt     DateTime
+  endAt       DateTime
+  allDay      Boolean  @default(false)
+
+  timezone    String?
+
+  // optional: track last modification from ICS if present
+  sequence    Int?
+  dtstamp     DateTime?
+  lastModified DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([calendarId])
+  @@unique([calendarId, uid, startAt], name: "calendar_uid_startAt")
 }
