@@ -3,8 +3,8 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import { useEffect, useState } from 'react';
 import { GetApi } from '@/lib/http-api';
-import { CalendarEvent } from '@prisma/client';
-import type { Calendar as C } from "@prisma/client"
+import { CalendarEvent } from '../../../generated/prisma/client';
+import type { Calendar as C } from "../../../generated/prisma/client"
 
 
 interface c2 extends C {

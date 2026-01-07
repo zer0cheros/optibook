@@ -7,8 +7,8 @@ import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { GetApi } from "@/lib/http-api"
 import { useEffect, useState } from "react"
-import { CalendarEvent } from "@prisma/client"
-import type { Calendar as C } from "@prisma/client"
+import { CalendarEvent } from "../../../generated/prisma/client"
+import type { Calendar as C } from "../../../generated/prisma/client"
 
 
 interface c2 extends C {
@@ -19,30 +19,43 @@ type CalendarEventProps = {
   calender: c2;
 }
 
-function isSameDay(a: Date, b: Date) {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
+const TZ = "Europe/Helsinki";
+
+function dayKey(d: Date) {
+  // en-CA => YYYY-MM-DD
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+}
+
+function isSameDayHelsinki(a: Date, b: Date) {
+  return dayKey(a) === dayKey(b);
 }
 
 export function Calendar31() {
-  const [date, setDate] = useState<Date>(
-    new Date(2025, 5, 12)
-  )
+  const [date, setDate] = useState(new Date());
   const [calendarEvents, setCalendarData] = useState<CalendarEvent[]>([]);
   useEffect(() => {
     async function fetchCalendar() {
       try { 
         const data = await GetApi<CalendarEventProps>("/calendar");
-        setCalendarData(data.calender.events);
+        setCalendarData(data.calender.events || []);
       } catch (error) {
         console.error("Failed to fetch calendar data:", error);
       }
     }
     fetchCalendar();
   }, []);
+const selected = dayKey(date);
+
+const matches = calendarEvents.filter(
+  (e) => dayKey(new Date(e.startAt as any)) === selected
+);
+
+console.log("selected:", selected, "matches:", matches.length, matches);
   return (
     <Card className="w-fit py-4">
       <CardContent className="px-4">
@@ -75,7 +88,7 @@ export function Calendar31() {
         </div>
         <div className="flex w-full flex-col gap-2">
   {calendarEvents
-    .filter((event) => isSameDay(new Date(event.startAt), date))
+    .filter((event) => isSameDayHelsinki(new Date(event.startAt), date))
     .map((event) => (
       <div
         key={event.id ?? event.title}

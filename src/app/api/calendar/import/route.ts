@@ -99,8 +99,19 @@ export async function POST(req: Request) {
   }
 
   // upsert per (calendarId, uid, startAt)
-  const upserted = await prisma.$transaction(
-    eventsToUpsert.map((ev) =>
+  function chunk<T>(arr: T[], size: number) {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
+const BATCH_SIZE = 50; // try 25/50/100 depending on DB latency
+
+let imported = 0;
+
+for (const batch of chunk(eventsToUpsert, BATCH_SIZE)) {
+  const res = await prisma.$transaction(
+    batch.map((ev) =>
       prisma.calendarEvent.upsert({
         where: {
           calendar_uid_startAt: {
@@ -109,20 +120,7 @@ export async function POST(req: Request) {
             startAt: ev.startAt,
           },
         },
-        create: {
-          calendarId: calendar.id,
-          uid: ev.uid,
-          title: ev.title,
-          description: ev.description,
-          location: ev.location,
-          startAt: ev.startAt,
-          endAt: ev.endAt,
-          allDay: ev.allDay,
-          timezone: ev.timezone,
-          sequence: ev.sequence,
-          dtstamp: ev.dtstamp,
-          lastModified: ev.lastModified,
-        },
+        create: { calendarId: calendar.id, ...ev },
         update: {
           title: ev.title,
           description: ev.description,
@@ -138,8 +136,8 @@ export async function POST(req: Request) {
     )
   );
 
-  return NextResponse.json({
-    calendarId: calendar.id,
-    imported: upserted.length,
-  });
+  imported += res.length;
+}
+
+return NextResponse.json({ calendarId: calendar.id, imported });
 }
