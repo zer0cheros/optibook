@@ -24,6 +24,9 @@ export function LoginForm({
   const handleLogin = async () => {
     await authClient.signIn.social({ provider: "github" })
   }
+  const handleMicrosoftLogin = async () => {
+    await authClient.signIn.social({ provider: "microsoft" })
+  }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -59,8 +62,11 @@ export function LoginForm({
               </Field>
               <Field>
                 <Button type="submit">Login</Button>
-                <Button onClick={handleLogin}variant="outline" type="button">
+                <Button onClick={handleLogin} variant={"outline"} type="button">
                   Login with Github
+                </Button>
+                <Button onClick={handleMicrosoftLogin} variant={"secondary"} type="button">
+                  Login with Microsoft
                 </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="#">Sign up</a>

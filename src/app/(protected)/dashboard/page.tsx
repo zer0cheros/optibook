@@ -1,8 +1,13 @@
 import Dashboard from "@/components/dashboard/app-dashboard"
+import { getCurrentUser } from "@/lib/session"
+import { redirect } from "next/navigation";
 
-
-export default function page() {
+export default async function page() {
+  const {user} = await getCurrentUser();
+  if(!user) {
+    redirect('login')
+  }
   return (
-    <Dashboard/>
+    <Dashboard user={user}/>
   )
 }

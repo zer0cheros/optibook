@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Home, Inbox, Search, Settings, StampIcon, User2 } from "lucide-react"
 
 import {
   Sidebar,
@@ -10,35 +10,33 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { Role, User } from "../../../generated/prisma/client"
 
-// Menu items.
-const items = [
-  {
-    title: "Hem",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Mina samtal",
-    url: "/dashboard",
-    icon: Inbox,
-  },
-  {
-    title: "Kalender",
-    url: "/calendar",
-    icon: Calendar,
-  }  
-]
+type SidebarItem = {
+  title: string
+  url: string
+  icon: any
+  role: Role[]
+}
 
-export function AppSidebar() {
+const items: SidebarItem[] = [
+  { title: "Hem", url: "/", icon: Home, role: ["USER", "TEACHER", "ADMIN"] },
+  { title: "Mina samtal", url: "/dashboard", icon: Inbox, role: ["USER", "TEACHER", "ADMIN"] },
+  { title: "Kalender", url: "/calendar", icon: Calendar, role: ["USER", "TEACHER", "ADMIN"] },
+  { title: "Användare", url: "/users", icon: User2, role: ["ADMIN"] },
+  { title: "Min Klass", url: "/class", icon: StampIcon, role: ["TEACHER", "ADMIN"] },
+] as const;
+
+export function AppSidebar({user}: {user:User}) {
+  const filteredItems = items.filter(i => i.role.includes(user.role));
   return (
     <Sidebar variant="floating">
       <SidebarContent>
         <SidebarGroup >
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>OptiBook</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {filteredItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>

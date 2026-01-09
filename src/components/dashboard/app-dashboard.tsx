@@ -5,8 +5,10 @@ import { Calendar31} from "./app-dashboard-calendrar"
 import { useState } from "react"
 import { ImportIcalModal } from "./import/import-ical"
 import { Suspense } from "react"
+import { User } from "../../../generated/prisma/browser"
 
-export default function Dashboard() {
+
+export default function Dashboard({user}: {user:User}) {
   const [open, setOpen] = useState(false);
   return (
     <div className="flex flex-col gap-8">
@@ -30,8 +32,9 @@ export default function Dashboard() {
         </div>
       </div>
       <Suspense fallback={<div>Loading calendar...</div>}>
-        <Calendar31/>
+        <Calendar31 user={user}/>
       </Suspense>
+      
         <ImportIcalModal
         open={open}
         onOpenChange={setOpen}

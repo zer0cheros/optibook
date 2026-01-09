@@ -1,3 +1,4 @@
+'use client'
 import {
   Menubar,
   MenubarContent,
@@ -7,10 +8,11 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar"
-import { getCurrentUser } from "@/lib/session";
+import { User } from "../../../generated/prisma/client";
+import { authClient } from "@/lib/auth-client";
 
-export async function MenubarDemo() {
-  const { user } = await getCurrentUser();
+export function MenubarDemo({user}: {user:User}) {
+  console.log("Menubar user:", user);
   return (
    <Menubar className="w-auto justify-end">
   <MenubarMenu>
@@ -44,7 +46,7 @@ export async function MenubarDemo() {
       </MenubarItem>
       <MenubarItem>Profil</MenubarItem>
       <MenubarSeparator />
-      <MenubarItem>Logga Ut</MenubarItem>
+      <MenubarItem onClick={()=> authClient.signOut()}>Logga Ut</MenubarItem>
     </MenubarContent>
   </MenubarMenu>}
 </Menubar>

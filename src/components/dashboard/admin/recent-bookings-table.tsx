@@ -1,7 +1,7 @@
 'use client'
 
-import { Card } from '../ui/card'
-import { Button } from '../ui/button'
+import { Card } from '../../ui/card'
+import { Button } from '../../ui/button'
 import { MoreVertical, CheckCircle, Clock, XCircle } from 'lucide-react'
 
 export function RecentBookingsTable() {

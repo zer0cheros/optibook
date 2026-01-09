@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from '../ui/card'
+import { Card } from '../../ui/card'
 import { Plus, Calendar, Users, Settings, FileText, CreditCard } from 'lucide-react'
 
 export function QuickActions() {

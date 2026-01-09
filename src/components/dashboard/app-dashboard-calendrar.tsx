@@ -8,7 +8,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { GetApi } from "@/lib/http-api"
 import { useEffect, useState } from "react"
 import { CalendarEvent } from "../../../generated/prisma/client"
-import type { Calendar as C } from "../../../generated/prisma/client"
+import type { Calendar as C, User } from "../../../generated/prisma/client"
+import EventCreateModal from "./event/app-event-create-modal"
 
 
 interface c2 extends C {
@@ -35,7 +36,8 @@ function isSameDayHelsinki(a: Date, b: Date) {
   return dayKey(a) === dayKey(b);
 }
 
-export function Calendar31() {
+export function Calendar31({user}:{user:User}) {
+
   const [date, setDate] = useState(new Date());
   const [calendarEvents, setCalendarData] = useState<CalendarEvent[]>([]);
   useEffect(() => {
@@ -55,15 +57,21 @@ const matches = calendarEvents.filter(
   (e) => dayKey(new Date(e.startAt as any)) === selected
 );
 
-console.log("selected:", selected, "matches:", matches.length, matches);
+const handleEvent = () => {
+  const title = prompt("Event title");
+}
   return (
-    <Card className="w-fit py-4">
-      <CardContent className="px-4">
+    <Card className="w-fit py-4 text-center">
+      <h2 className="text-xl font-bold">{user.name} Kalender</h2>
+      <CardContent className="px-4 flex justify-center">
+        
         <Calendar
           mode="single"
           selected={date}
           onSelect={setDate}
-          className="bg-transparent p-0"
+          showWeekNumber={true}
+          weekStartsOn={1}
+          className="bg-transparent p-0 w-full min-w-md"
           required
         />
       </CardContent>
@@ -76,15 +84,12 @@ console.log("selected:", selected, "matches:", matches.length, matches);
               year: "numeric",
             })}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-6"
-            title="Add Event"
-          >
-            <PlusIcon />
-            <span className="sr-only">Add Event</span>
-          </Button>
+          <EventCreateModal user={user}>
+            <Button size="icon" variant="outline">
+              < PlusIcon />
+            </Button>
+            </EventCreateModal>
+          
         </div>
         <div className="flex w-full flex-col gap-2">
   {calendarEvents

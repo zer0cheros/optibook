@@ -1,8 +1,8 @@
 'use client'
 
 import { Calendar, Clock, DollarSign, Users, CalendarCheck, Plus, Filter, Download } from 'lucide-react'
-import { Card } from '../ui/card'
-import { Button } from '../ui/button'
+import { Card } from '../../ui/card'
+import { Button } from '../../ui/button'
 import { BookingTrendChart } from './booking-trend-chart'
 import { RecentBookingsTable } from './recent-bookings-table'
 import { UpcomingAppointments } from './upcoming-appointments'
