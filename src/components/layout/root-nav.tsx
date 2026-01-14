@@ -10,18 +10,18 @@ import {
 } from "@/components/ui/menubar"
 import { User } from "../../../generated/prisma/client";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 
 export function MenubarDemo({user}: {user:User}) {
-  console.log("Menubar user:", user);
   return (
    <Menubar className="w-auto justify-end">
   <MenubarMenu>
     <MenubarTrigger>Kontakta</MenubarTrigger>
     <MenubarContent>
-      <MenubarItem>
+      <Link href={'/contact/us'}><MenubarItem>
         Var du hittar oss <MenubarShortcut>⌘T</MenubarShortcut>
-      </MenubarItem>
-      <MenubarItem>Personer</MenubarItem>
+      </MenubarItem></Link>
+      <Link href={'/contact/persons'}><MenubarItem>Personer</MenubarItem></Link>
       <MenubarSeparator />
     </MenubarContent>
   </MenubarMenu>
@@ -37,10 +37,17 @@ export function MenubarDemo({user}: {user:User}) {
 
     </MenubarContent>
   </MenubarMenu>
-  {user &&  
+  {user &&
     <MenubarMenu>
-    <MenubarTrigger>User</MenubarTrigger>
+    <MenubarTrigger>{user.name}</MenubarTrigger>
     <MenubarContent>
+      <Link href={'/dashboard'}><MenubarItem>
+        Dashboard<MenubarShortcut>⌘D</MenubarShortcut>
+      </MenubarItem></Link>
+      <Link href={'/classes'}><MenubarItem>
+        Klasser<MenubarShortcut>⌘K</MenubarShortcut>
+      </MenubarItem></Link>
+      <MenubarSeparator />
       <MenubarItem>
         Inställningar<MenubarShortcut>⌘T</MenubarShortcut>
       </MenubarItem>

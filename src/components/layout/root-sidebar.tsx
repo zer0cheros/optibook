@@ -24,7 +24,7 @@ const items: SidebarItem[] = [
   { title: "Mina samtal", url: "/dashboard", icon: Inbox, role: ["USER", "TEACHER", "ADMIN"] },
   { title: "Kalender", url: "/calendar", icon: Calendar, role: ["USER", "TEACHER", "ADMIN"] },
   { title: "Användare", url: "/users", icon: User2, role: ["ADMIN"] },
-  { title: "Min Klass", url: "/class", icon: StampIcon, role: ["TEACHER", "ADMIN"] },
+  { title: "Min Klass", url: "/classes", icon: StampIcon, role: ["TEACHER", "ADMIN"] },
 ] as const;
 
 export function AppSidebar({user}: {user:User}) {

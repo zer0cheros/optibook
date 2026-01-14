@@ -6,6 +6,7 @@ import { useState } from "react"
 import { ImportIcalModal } from "./import/import-ical"
 import { Suspense } from "react"
 import { User } from "../../../generated/prisma/browser"
+import { UpcomingBookings } from "./upcoming-bookings"
 
 
 export default function Dashboard({user}: {user:User}) {
@@ -31,6 +32,10 @@ export default function Dashboard({user}: {user:User}) {
           </Button>
         </div>
       </div>
+
+      {/* Upcoming Bookings Section */}
+      <UpcomingBookings userId={user.id} />
+
       <Suspense fallback={<div>Loading calendar...</div>}>
         <Calendar31 user={user}/>
       </Suspense>

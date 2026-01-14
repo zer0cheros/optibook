@@ -54,6 +54,8 @@ model User {
   accounts      Account[]
   bookings      Booking[]
   calendars     Calendar[]
+  teachingClasses Class[] @relation("TeacherClasses")
+  classEnrollments ClassEnrollment[]
   @@unique([email])
   @@map("user")
 }
@@ -91,16 +93,25 @@ model Verification {
 }
 
 model Booking {
-  id         String   @id
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  resourceId String
-  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
-  date       DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resourceId  String
+  resource    Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  classId     String?
+  class       Class?   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacherId   String?
+  title       String?
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  date        DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([userId])
+  @@index([classId])
+  @@index([teacherId])
 }
 
 model Resource {
@@ -109,6 +120,60 @@ model Resource {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   bookings  Booking[]
+}
+
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Class {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  inviteToken String?   @unique
+  teacherId   String
+  teacher     User      @relation("TeacherClasses", fields: [teacherId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  enrollments ClassEnrollment[]
+  resources   ClassResource[]
+  bookings    Booking[]
+
+  @@index([teacherId])
+  @@map("class")
+}
+
+model ClassEnrollment {
+  id        String           @id @default(cuid())
+  classId   String
+  class     Class            @relation(fields: [classId], references: [id], onDelete: Cascade)
+  studentId String
+  student   User             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  status    EnrollmentStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([classId, studentId])
+  @@index([classId])
+  @@index([studentId])
+  @@map("class_enrollment")
+}
+
+model ClassResource {
+  id          String   @id @default(cuid())
+  classId     String
+  class       Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  url         String?
+  fileUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([classId])
+  @@map("class_resource")
 }
 
 model Calendar {
